@@ -7,12 +7,21 @@ import ItemStatusFilter from '../ItemStatusFilter'
 import ItemAddForm from '../ItemAddForm'
 
 import './App.css';
+import {ITodo, TodoParamType} from "../../types";
 
-export default class App extends Component{
+interface IProps {}
+
+interface IState {
+    todoData : Array<ITodo>
+    searchText: string
+    filter: string
+}
+
+export default class App extends Component<IProps, IState> {
 
     maxId = 100;
 
-    createTodoItem(text) {
+    createTodoItem(text: string):ITodo {
         return {
             label : text,
             important: false,
@@ -21,7 +30,7 @@ export default class App extends Component{
         }
     }
 
-    constructor(props) {
+    constructor(props: Readonly<IProps>) {
         super(props);
 
         this.state = {
@@ -43,21 +52,23 @@ export default class App extends Component{
         this.setFilter = this.setFilter.bind(this);
     }
 
-    onDeleted(id) {
+    onDeleted(id: number) {
         this.setState(({todoData}) => (
             { todoData: todoData.filter(data => data.id !== id) }
         ))
     }
 
-    onAddItem(data) {
+    onAddItem(data: string) {
         this.setState(({todoData}) => {
             const newData = this.createTodoItem(data);
             return {todoData: [...todoData, newData]}
         })
     }
 
-    onToggle(arr, id, param) {
-        return arr.map(data => {
+    onToggle(arr: Array<ITodo>, id: number, param: TodoParamType): Array<ITodo> {
+
+        // @ts-ignore
+        return arr.map((data) => {
             if(data.id === id){
                 const {[param] : temporary, ...others} = data;
                 return {...others, ...{[param]: !temporary}};
@@ -66,19 +77,19 @@ export default class App extends Component{
         })
     }
 
-    onToggleImportant(id) {
+    onToggleImportant(id: number) {
         this.setState(({todoData}) => (
             {todoData: this.onToggle(todoData, id, "important")}
         ))
     }
 
-    onToggleDone(id) {
+    onToggleDone(id: number) {
         this.setState(({todoData}) => (
             {todoData: this.onToggle(todoData, id, "done")}
         ))
     }
 
-    onSearch(data, text) {
+    onSearch(data: Array<ITodo>, text: string) {
         if(!text) return data;
         return data.filter(item => (
                 item.label.toLowerCase()
@@ -87,17 +98,17 @@ export default class App extends Component{
 
     }
 
-    setSearchText(text) {
+    setSearchText(text: string) {
         this.setState({
             searchText: text
         })
     }
 
-    setFilter(filter){
+    setFilter(filter: string){
         this.setState({filter})
     }
 
-    todoFilter(todos, filter) {
+    todoFilter(todos: Array<ITodo>, filter: string) {
         switch (filter) {
             case "all": return todos;
             case "active": {
@@ -113,11 +124,13 @@ export default class App extends Component{
     render() {
 
         const {todoData, searchText, filter} = this.state;
-        const doneCount = todoData.filter(todo => todo.done).length;
-        const todoCount = todoData.length - doneCount;
+        const doneCount: number = todoData.filter(todo => todo.done).length;
+        const todoCount: number = todoData.length - doneCount;
 
         const visibleTodos = this.todoFilter(this.onSearch(todoData, searchText), filter);
 
+        // @ts-ignore
+        // @ts-ignore
         return (
             <div className="todoApp">
                 <AppHeader toDo={todoCount} done={doneCount}/>
@@ -135,10 +148,10 @@ export default class App extends Component{
                     onToggleDone={this.onToggleDone}
                     onToggleImportant={this.onToggleImportant}
                 />
+
                 <ItemAddForm onAddItem={this.onAddItem}/>
             </div>
         )
     }
 
 }
-

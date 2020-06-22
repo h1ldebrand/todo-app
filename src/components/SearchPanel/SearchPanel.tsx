@@ -1,14 +1,20 @@
-import React, {Component} from 'react';
+import React, {ChangeEvent, Component} from 'react';
 
-class SearchPanel extends Component{
+interface IProps {
+    onSearch: (text: string) => void
+}
 
-    constructor(props) {
+interface IState {}
+
+class SearchPanel extends Component<IProps, IState>{
+
+    constructor(props: Readonly<IProps>) {
         super(props);
 
         this.handleSearch = this.handleSearch.bind(this);
     }
 
-    handleSearch(e) {
+    handleSearch(e: ChangeEvent<HTMLInputElement>) {
         this.props.onSearch(e.target.value);
     }
 
@@ -26,7 +32,5 @@ class SearchPanel extends Component{
     }
 
 }
-
-
 
 export default SearchPanel;

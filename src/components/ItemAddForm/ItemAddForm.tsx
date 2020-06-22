@@ -1,10 +1,18 @@
-import React, {Component} from 'react';
+import React, {Component, ChangeEvent, FormEvent} from 'react';
 import './ItemAddForm.css';
 
-class ItemAddForm extends Component {
+interface IProps {
+    onAddItem: (data: string) => void
+}
+
+interface IState {
+    label: string
+}
+
+class ItemAddForm extends Component<IProps, IState> {
 
 
-    constructor(props) {
+    constructor(props: Readonly<IProps>) {
         super(props);
 
         this.state = {
@@ -15,13 +23,13 @@ class ItemAddForm extends Component {
         this.onSubmit = this.onSubmit.bind(this);
     }
 
-    onLabelChange(e) {
+    onLabelChange(e: ChangeEvent<HTMLInputElement>) {
         this.setState({
             label: e.target.value
         })
     }
 
-    onSubmit(e) {
+    onSubmit(e: FormEvent) {
         e.preventDefault();
         this.props.onAddItem(this.state.label);
         this.setState({

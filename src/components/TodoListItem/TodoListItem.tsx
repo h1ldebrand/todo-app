@@ -1,9 +1,14 @@
-import React from 'react';
+import React, {FC} from 'react';
 import './TodoListItem.css';
+import {ITodoWithoutId} from "../../types";
 
+interface ITodoListItem extends ITodoWithoutId {
+    onDeleted: () => void
+    onToggleDone: () => void
+    onToggleImportant: () => void
+}
 
-
-const TodoListItem = (props) => {
+const TodoListItem: FC<ITodoListItem> = (props) => {
 
     const {label,
             onDeleted,
